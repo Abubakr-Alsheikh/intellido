@@ -1,25 +1,50 @@
-import logo from './logo.svg';
-import './App.css';
+import React from 'react';
+import { Outlet, useLocation } from 'react-router-dom'; 
+import { AppBar, Toolbar, Typography, Link } from '@mui/material'; 
+import Logout from './components/Logout'; // Import the Logout component
 
-function App() {
+const App = () => {
+  
+  const location = useLocation(); // Get the current location
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <AppBar position="static">
+        <Toolbar>
+          <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+            AI To-Do App
+          </Typography>
+          
+          <Link href="/signup" color="inherit" underline="none">
+            Sign Up
+          </Link>
+          <Link href="/tasks" color="inherit" underline="none">
+            Tasks
+          </Link>
+          {location.pathname !== '/login' && (
+            <>
+              <Link href="/tasks" color="inherit" underline="none">
+                Tasks
+              </Link>
+              {/* ... other navigation links */}
+            </>
+          )}
+          {/* ... other navigation links */}
+          <Logout /> {/* Add the logout button */}
+          {location.pathname !== '/login' && (
+            <>
+              <Link href="/login" color="inherit" underline="none">
+                Login
+              </Link>
+              {/* ... other navigation links */}
+            </>
+          )} 
+        </Toolbar>
+      </AppBar>
+
+      <Outlet /> {/* Renders the nested routes (TaskList, AddTaskForm, etc.) */}
     </div>
   );
-}
+};
 
 export default App;
