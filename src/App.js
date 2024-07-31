@@ -15,15 +15,15 @@ const App = () => {
             AI To-Do App
           </Typography>
           
-          <Link href="/signup" color="inherit" underline="none">
+          <Link href="/intellido/#/signup" color="inherit" underline="none">
             Sign Up
           </Link>
-          <Link href="/tasks" color="inherit" underline="none">
+          <Link href="/intellido/#/tasks" color="inherit" underline="none">
             Tasks
           </Link>
           {location.pathname !== '/login' && (
             <>
-              <Link href="/tasks" color="inherit" underline="none">
+              <Link href="/intellido/#/tasks" color="inherit" underline="none">
                 Tasks
               </Link>
               {/* ... other navigation links */}
@@ -33,7 +33,7 @@ const App = () => {
           <Logout /> {/* Add the logout button */}
           {location.pathname !== '/login' && (
             <>
-              <Link href="/login" color="inherit" underline="none">
+              <Link href="/intellido/#/login" color="inherit" underline="none">
                 Login
               </Link>
               {/* ... other navigation links */}
