@@ -13,7 +13,7 @@ import LoginForm from "./components/LoginForm";
 import AddTaskForm from "./components/AddTaskForm";
 import EditTaskForm from "./components/EditTaskForm";
 import PageNotFound from "./components/PageNotFound";
-// import AIChat from './components/AIChat';
+import AIChat from './components/AIChat';
 
 const theme = createTheme({
   // ... your Material UI theme customizations
@@ -33,7 +33,7 @@ root.render(
               <Route path="add-task" element={<AddTaskForm />} />
               <Route path="login" element={<LoginForm />} />
               <Route path="edit-task/:taskId" element={<EditTaskForm />} />
-              {/* <Route path="ai-chat" element={<AIChat />} />  */}
+              <Route path="ai-chat" element={<AIChat />} /> 
               {/* Catch-all route for any unmatched URL */}
               <Route path="*" element={<PageNotFound />} />
             </Route>

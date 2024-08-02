@@ -21,6 +21,9 @@ const App = () => {
           <Link href="/intellido/#/tasks" color="inherit" underline="none">
             Tasks
           </Link>
+          <Link href="/intellido/#/ai-chat" color="inherit" underline="none">
+            AI chat
+          </Link>
           {location.pathname !== '/login' && (
             <>
               <Link href="/intellido/#/tasks" color="inherit" underline="none">
