@@ -12,6 +12,7 @@ export const getChatHistory = createAsyncThunk(
   async () => {
     try {
       const response = await api.getChatHistory();
+      console.log(response.data);
       return response.data;
     } catch (error) {
       throw new Error(
@@ -25,23 +26,20 @@ export const sendChatMessage = createAsyncThunk(
   "chat/sendChatMessage",
   async (messageData, { dispatch }) => {
     try {
-      const isFormData = messageData instanceof FormData;
-
-      // Optimistically update with different content based on type
+      const content = messageData.get("content");
       dispatch(
         sendMessage({
-          parts: messageData.get("content"), // Temporary content for FormData
+          parts: content ? [content] : [], // Ensure parts is always an array
           role: "user",
         })
       );
 
       const response = await api.sendMessage(messageData);
-
-      // Update the message with actual data/content from the server
+      console.log(response.data);
       dispatch(
         sendMessage({
-          parts: response.data, // Use file URL or text content
-          role: "assistant",
+            parts: Array.isArray(response.data.parts) ? response.data.parts : [response.data.parts], // Ensure it's an array 
+            role: "model",
         })
       );
     } catch (error) {
@@ -118,7 +116,7 @@ const chatSlice = createSlice({
         state.isLoading = true;
         state.error = null;
       })
-      .addCase(sendChatMessage.fulfilled, (state) => {
+      .addCase(sendChatMessage.fulfilled, (state, action) => {
         state.isLoading = false;
       })
       .addCase(sendChatMessage.rejected, (state, action) => {
@@ -132,6 +130,10 @@ const chatSlice = createSlice({
   },
 });
 
-export const { sendMessage, updateMessage, deleteMessage, clearChatError } =
-  chatSlice.actions;
+export const {
+  sendMessage,
+  updateMessage,
+  deleteMessage,
+  clearChatError,
+} = chatSlice.actions;
 export default chatSlice.reducer;

@@ -3,12 +3,15 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { TextField, Button, Typography } from '@mui/material';
 import { API_BASE_URL} from '../services/api'
+import { login } from '../redux/slices/authSlice';
+import { useDispatch } from 'react-redux';
 
 const SignupForm = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState(null);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -17,10 +20,10 @@ const SignupForm = () => {
         username,
         password,
       });
-      localStorage.setItem('access_token', response.data.access);
-      localStorage.setItem('refresh_token', response.data.refresh);
+      // Store tokens in Redux store
+      dispatch(login(response.data)); 
       setError(null);
-      navigate('/tasks'); // Redirect to tasks after successful signup
+      navigate('/tasks');
     } catch (error) {
       setError(error.response?.data?.detail || 'Failed to create user');
     }

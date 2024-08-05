@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { Link } from 'react-router-dom'; 
+import { Link, Navigate } from 'react-router-dom'; 
 import { fetchTasks, deleteTask, toggleTaskCompletion } from '../redux/slices/tasksSlice'; // Adjust import paths
 import { List, ListItem, ListItemText, ListItemSecondaryAction, IconButton, Checkbox, Button } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete'; 
@@ -11,6 +11,7 @@ const TaskList = () => {
   const tasks = useSelector((state) => state.tasks.tasks); // Access tasks from Redux store
   const isLoading = useSelector((state) => state.tasks.isLoading); // Access loading state
   const error = useSelector((state) => state.tasks.error); // Access error state
+  const isLoggedIn = useSelector((state) => state.auth.isLoggedIn); // Check for login state
 
   useEffect(() => {
     dispatch(fetchTasks()); // Fetch tasks when the component mounts
@@ -32,11 +33,14 @@ const TaskList = () => {
     return <div>Error: {error}</div>;
   }
 
+  console.log(isLoggedIn);
+
+  if (!isLoggedIn) {
+    return <Navigate to="/login" replace />; // Redirect to login if not logged in
+  }
+
   return (
     <div>
-      <Button component={Link} to="/add-task" variant="contained" color="primary">
-        Add Task
-      </Button>
       <List>
         {tasks.map((task) => (
           <ListItem key={task.id}>
@@ -56,6 +60,9 @@ const TaskList = () => {
           </ListItem>
         ))}
       </List>
+      <Button component={Link} to="/add-task" variant="contained" color="primary">
+        Add Task
+      </Button>
     </div>
   );
 };

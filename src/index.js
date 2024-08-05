@@ -1,13 +1,13 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
 import { Provider } from "react-redux";
+import store from "./redux/store";
 import { HashRouter, Routes, Route } from "react-router-dom";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
 
 import App from "./App";
 import TaskList from "./components/TaskList";
-import store from "./redux/store";
 import SignupForm from "./components/SignupForm";
 import LoginForm from "./components/LoginForm";
 import AddTaskForm from "./components/AddTaskForm";
