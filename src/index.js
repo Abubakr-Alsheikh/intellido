@@ -1,45 +1,70 @@
-import React from "react";
-import ReactDOM from "react-dom/client";
-import { Provider } from "react-redux";
-import store from "./redux/store";
-import { HashRouter, Routes, Route } from "react-router-dom";
-import { ThemeProvider, createTheme } from "@mui/material/styles";
-import CssBaseline from "@mui/material/CssBaseline";
+import React, { useState, useEffect } from 'react';
+import ReactDOM from 'react-dom/client';
+import { Provider } from 'react-redux';
+import { ThemeProvider, createTheme } from '@mui/material/styles';
+import CssBaseline from '@mui/material/CssBaseline';
+import App from './App';
+import store from './redux/store';
+import { indigo, lightBlue } from '@mui/material/colors';
 
-import App from "./App";
-import TaskList from "./components/TaskList";
-import SignupForm from "./components/SignupForm";
-import LoginForm from "./components/LoginForm";
-import AddTaskForm from "./components/AddTaskForm";
-import EditTaskForm from "./components/EditTaskForm";
-import PageNotFound from "./components/PageNotFound";
-import AIChat from './components/AIChat';
+const getInitialTheme = () => {
+  // Check if user has a preferred theme
+  const storedTheme = localStorage.getItem('theme');
+  if (storedTheme) {
+    return storedTheme;
+  }
 
-const theme = createTheme({
-  // ... your Material UI theme customizations
-});
+  // Use device theme if no preference
+  if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+    return 'dark';
+  } 
 
-const root = ReactDOM.createRoot(document.getElementById("root"));
+  // Default to light theme
+  return 'light';
+};
+
+const AppWrapper = () => {
+  const [mode, setMode] = useState(getInitialTheme());
+
+  const theme = createTheme({
+    palette: {
+      mode: mode,
+      primary: indigo,
+      secondary: lightBlue,
+    },
+    typography: {
+      fontFamily: [
+        'monospace',
+        'Arial',
+        'sans-serif',
+        '"Segoe UI Symbol"',
+        '"Segoe UI"',
+        '"Segoe UI Emoji"',
+      ].join(','),
+    },
+  });
+
+  useEffect(() => {
+    localStorage.setItem('theme', mode);
+  }, [mode]);
+
+  const toggleTheme = () => {
+    setMode((prevMode) => (prevMode === 'light' ? 'dark' : 'light'));
+  };
+
+  return (
+    <ThemeProvider theme={theme}>
+      <CssBaseline />
+      <App toggleTheme={toggleTheme} />
+    </ThemeProvider>
+  );
+};
+
+const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
     <Provider store={store}>
-      <ThemeProvider theme={theme}>
-        <CssBaseline />
-        <HashRouter future={{ v7_startTransition: true }}>
-          <Routes>
-            <Route path="/" element={<App />}>
-              <Route path="tasks" element={<TaskList />} />
-              <Route path="signup" element={<SignupForm />} />
-              <Route path="add-task" element={<AddTaskForm />} />
-              <Route path="login" element={<LoginForm />} />
-              <Route path="edit-task/:taskId" element={<EditTaskForm />} />
-              <Route path="ai-chat" element={<AIChat />} /> 
-              {/* Catch-all route for any unmatched URL */}
-              <Route path="*" element={<PageNotFound />} />
-            </Route>
-          </Routes>
-        </HashRouter>
-      </ThemeProvider>
+      <AppWrapper />
     </Provider>
   </React.StrictMode>
 );

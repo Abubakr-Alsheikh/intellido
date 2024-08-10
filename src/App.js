@@ -1,39 +1,38 @@
 import React from "react";
-import { Outlet, useLocation } from "react-router-dom";
-import { AppBar, Toolbar, Typography, Link } from "@mui/material";
-import Logout from "./components/Logout";
+import {
+  Routes,
+  Route,
+  Navigate,
+  HashRouter,
+} from "react-router-dom";
+import { useSelector } from "react-redux";
+import AuthPage from "./components/AuthPage";
+import HomePage from "./components/HomePage";
+import SignupForm from "./components/Auth/SignupForm";
+import LoginForm from "./components/Auth/LoginForm";
+import TaskList from "./components/Tasks/TaskList";
+import AIChat from "./components/AIChat/AIChat";
 
-const App = () => {
-  const location = useLocation(); // Get the current location
+const App = ({toggleTheme}) => {
+  const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
 
   return (
-    <div>
-      <AppBar position="static">
-        <Toolbar>
-          <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-            IntelliDo
-          </Typography>
-          <Link href="/intellido/#/signup" color="inherit" underline="none">
-            Sign Up
-          </Link>
-          <Link href="/intellido/#/tasks" color="inherit" underline="none">
-            Tasks
-          </Link>
-          <Link href="/intellido/#/ai-chat" color="inherit" underline="none">
-            AI chat
-          </Link>
-          <Logout />
-          {location.pathname !== "/login" && (
-            <>
-              <Link href="/intellido/#/login" color="inherit" underline="none">
-                Login
-              </Link>
-            </>
-          )}
-        </Toolbar>
-      </AppBar>
-      <Outlet />
-    </div>
+    <HashRouter>
+      <Routes>
+        {/* Public Routes */}
+        <Route path="/" element={<AuthPage />} /> {/* Landing page */}
+        <Route path="/signup" element={<SignupForm />} />
+        <Route path="/login" element={<LoginForm />} />
+        {/* Protected Routes - Only accessible when logged in */}
+        <Route
+          path="/home"
+          element={isLoggedIn ? <HomePage toggleTheme={toggleTheme} /> : <Navigate to="/login" />}
+        >
+          <Route path="tasks" element={<TaskList />} />
+          <Route path="ai-chat" element={<AIChat />} />
+        </Route>
+      </Routes>
+    </HashRouter>
   );
 };
 

@@ -51,19 +51,20 @@ export const updateTask = createAsyncThunk('tasks/updateTask', async (taskData) 
   }
 });
 
+export const toggleTaskCompletion = (taskId) => (dispatch, getState) => { 
+  // Get the current task from the state
+  const task = getState().tasks.tasks.find((t) => t.id === taskId);
+
+  if (task) {
+    // Update the task on the backend 
+    dispatch(updateTask({ ...task, is_completed: !task.is_completed })); 
+  }
+};
+
 const tasksSlice = createSlice({
   name: "tasks",
   initialState,
-  reducers: {
-    // Reducer for toggling task completion
-    toggleTaskCompletion(state, action) {
-      const taskId = action.payload;
-      const task = state.tasks.find((t) => t.id === taskId);
-      if (task) {
-        task.is_completed = !task.is_completed;
-      }
-    },
-  },
+  reducers: {},
   extraReducers: (builder) => {
     builder
       // Fetch tasks
@@ -101,19 +102,8 @@ const tasksSlice = createSlice({
           state.tasks[taskIndex] = action.payload;
         }
       });
-    // ... other extraReducers for updating and deleting tasks
   },
 });
-
-export const toggleTaskCompletion = (taskId) => (dispatch, getState) => { 
-  // Get the current task from the state
-  const task = getState().tasks.tasks.find((t) => t.id === taskId);
-
-  if (task) {
-    // Update the task on the backend 
-    dispatch(updateTask({ ...task, is_completed: !task.is_completed })); 
-  }
-};
 
 // export const { toggleTaskCompletion } = tasksSlice.actions;
 export default tasksSlice.reducer;

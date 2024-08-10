@@ -2,7 +2,7 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import * as api from "../../services/api";
 
 const initialState = {
-  chatHistory: [],
+  chatHistory: [{current_chat:[]}],
   isLoading: false,
   error: null,
 };
@@ -12,7 +12,6 @@ export const getChatHistory = createAsyncThunk(
   async () => {
     try {
       const response = await api.getChatHistory();
-      console.log(response.data);
       return response.data;
     } catch (error) {
       throw new Error(
@@ -35,7 +34,6 @@ export const sendChatMessage = createAsyncThunk(
       );
 
       const response = await api.sendMessage(messageData);
-      console.log(response.data);
       dispatch(
         sendMessage({
             parts: Array.isArray(response.data.parts) ? response.data.parts : [response.data.parts], // Ensure it's an array 
@@ -44,7 +42,6 @@ export const sendChatMessage = createAsyncThunk(
       );
     } catch (error) {
       // If an error occurs, rollback the optimistic update
-      console.log(error);
       throw new Error(
         error.response?.data?.detail || "Failed to send message."
       );
@@ -57,7 +54,7 @@ export const clearChatHistory = createAsyncThunk(
   async () => {
     try {
       await api.clearChat();
-      return []; // Return an empty array to clear the chat history
+      return initialState; // Return an empty array to clear the chat history
     } catch (error) {
       throw new Error(
         error.response?.data?.detail || "Failed to clear chat history."
@@ -74,6 +71,7 @@ const chatSlice = createSlice({
       if (state.chatHistory.length === 0) {
         // If empty, initialize it with an object containing current_chat:
         state.chatHistory.push({ current_chat: [action.payload] });
+        state.chatHistory[0].current_chat.push(action.payload);
       } else {
         // If not empty, push to the existing current_chat:
         state.chatHistory[0].current_chat.push(action.payload);
