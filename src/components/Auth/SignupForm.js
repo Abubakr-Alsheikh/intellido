@@ -42,7 +42,7 @@ const SignupForm = () => {
       });
       dispatch(login(response.data));
       setError(null);
-      navigate('/intellido/home/tasks'); 
+      navigate('/home/tasks'); 
     } catch (error) {
       setError(error.response?.data?.detail || 'Failed to create user');
     }

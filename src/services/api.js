@@ -1,11 +1,10 @@
-import axios from 'axios'; 
+import axios from "axios";
+import store from "../redux/store";
+import { logout, setTokens } from "../redux/slices/authSlice";
+import { Navigate } from "react-router-dom";
 
-import store  from '../redux/store'; // Assuming you export the store
-import { logout, setTokens } from '../redux/slices/authSlice';
-import { Navigate } from 'react-router-dom';
-
-// export const API_BASE_URL = 'http://localhost:8000/intellido/'; // Replace with your backend URL
-export const API_BASE_URL = 'https://abubakralsheikh.pythonanywhere.com/intellido/'; // Replace with your backend URL
+export const API_BASE_URL = "http://localhost:8000/intellido/";
+// export const API_BASE_URL = 'https://abubakralsheikh.pythonanywhere.com/intellido/';
 
 const apiClient = axios.create({
   baseURL: API_BASE_URL,
@@ -34,23 +33,30 @@ apiClient.interceptors.response.use(
       originalRequest._retry = true;
 
       try {
-        const refreshResponse = await axios.post(`${API_BASE_URL}api/token/refresh/`, {
-          refresh: store.getState().auth.refreshToken,
-        });
+        const refreshResponse = await axios.post(
+          `${API_BASE_URL}api/token/refresh/`,
+          {
+            refresh: store.getState().auth.refreshToken,
+          }
+        );
 
-        store.dispatch(setTokens({ 
+        store.dispatch(
+          setTokens({
             accessToken: refreshResponse.data.access,
             // Assuming your backend sends back the refreshed refresh token
-            refreshToken: refreshResponse.data.refresh || store.getState().auth.refreshToken, 
-        }));
+            refreshToken:
+              refreshResponse.data.refresh ||
+              store.getState().auth.refreshToken,
+          })
+        );
 
         originalRequest.headers.Authorization = `Bearer ${refreshResponse.data.access}`;
         return axios(originalRequest);
       } catch (refreshError) {
-        console.error('Token refresh failed:', refreshError);
+        console.error("Token refresh failed:", refreshError);
         // Handle refresh token failure, potentially by logging the user out:
         store.dispatch(logout());
-        Navigate('/login');
+        Navigate("/login");
         return;
       }
     }
@@ -58,15 +64,14 @@ apiClient.interceptors.response.use(
   }
 );
 
-
 // Tasks API
-export const fetchTasks = () => apiClient.get(`tasks/`); 
-export const fetchTask = (taskId) => apiClient.get(`tasks/${taskId}/`); 
+export const fetchTasks = () => apiClient.get(`tasks/`);
+export const fetchTask = (taskId) => apiClient.get(`tasks/${taskId}/`);
 export const createTask = (taskData) => apiClient.post(`tasks/`, taskData);
 export const deleteTask = (taskId) => apiClient.delete(`tasks/${taskId}/`);
 export const updateTask = (taskData) => apiClient.put(`tasks/${taskData.id}/`, taskData);
 
 // Chat API
-export const sendMessage = (messageData) => apiClient.post('chat/', messageData);
-export const getChatHistory = () => apiClient.get('chat/'); 
-export const clearChat = () => apiClient.post('chat/clear/');
+export const sendMessage = (messageData) => apiClient.post("chat/", messageData);
+export const getChatHistory = () => apiClient.get("chat/");
+export const clearChat = () => apiClient.post("chat/clear/");
