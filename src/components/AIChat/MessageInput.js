@@ -15,6 +15,55 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import InsertDriveFileIcon from "@mui/icons-material/InsertDriveFile";
 import AttachFileIcon from "@mui/icons-material/AttachFile";
 
+// Define allowed file types and constants
+const ALLOWED_IMAGE_TYPES = [
+  "image/png",
+  "image/jpeg",
+  "image/webp",
+  "image/heic",
+  "image/heif",
+];
+const ALLOWED_AUDIO_TYPES = [
+  "audio/wav",
+  "audio/mp3",
+  "audio/mpeg",
+  "audio/x-m4a",
+  "audio/aiff",
+  "audio/aac",
+  "audio/ogg",
+  "audio/flac",
+];
+const ALLOWED_VIDEO_TYPES = [
+  "video/mp4",
+  "video/mpeg",
+  "video/mov",
+  "video/avi",
+  "video/x-flv",
+  "video/mpg",
+  "video/webm",
+  "video/wmv",
+  "video/3gpp",
+];
+const ALLOWED_TEXT_TYPES = [
+  "text/plain",
+  "text/html",
+  "text/css",
+  "text/javascript",
+  "application/x-javascript",
+  "text/x-typescript",
+  "application/x-typescript",
+  "text/csv",
+  "text/markdown",
+  "text/x-python",
+  "application/x-python-code",
+  "application/json",
+  "text/xml",
+  "application/rtf",
+  "text/rtf",
+];
+const MAX_FILE_SIZE = 50 * 1024 * 1024; // 50MB
+const MAX_DURATION = 60 * 60; // 60 minutes
+
 const MessageInput = ({
   selectedFile,
   inputMessage,
@@ -27,120 +76,88 @@ const MessageInput = ({
   const [errorMessage, setErrorMessage] = useState(null);
   const [isValidating, setIsValidating] = useState(false);
 
-  const allowedImageTypes = [
-    "image/png",
-    "image/jpeg",
-    "image/webp",
-    "image/heic",
-    "image/heif",
-  ];
-  const allowedAudioTypes = [
-    "audio/wav",
-    "audio/mp3",
-    "audio/mpeg",
-    "audio/x-m4a",
-    "audio/aiff",
-    "audio/aac",
-    "audio/ogg",
-    "audio/flac",
-  ];
-  const allowedVideoTypes = [
-    "video/mp4",
-    "video/mpeg",
-    "video/mov",
-    "video/avi",
-    "video/x-flv",
-    "video/mpg",
-    "video/webm",
-    "video/wmv",
-    "video/3gpp",
-  ];
-  const allowedTextTypes = [
-    "text/plain",
-    "text/html",
-    "text/css",
-    "text/javascript",
-    "application/x-javascript",
-    "text/x-typescript",
-    "application/x-typescript",
-    "text/csv",
-    "text/markdown",
-    "text/x-python",
-    "application/x-python-code",
-    "application/json",
-    "text/xml",
-    "application/rtf",
-    "text/rtf",
-  ];
-  const MAX_FILE_SIZE = 50 * 1024 * 1024; // 50MB
-  const MAX_DURATION = 5 * 60; // 5 minutes
-
-  const handleFileChange = async (event) => {
-    setErrorMessage(null);
-    const file = event.target.files[0];
-    console.log(file);
-    if (!file) {
-      setSelectedFile(null);
-      return;
-    }
-    setIsValidating(true);
-
+  // Function to validate file type, size, and duration
+  const validateFile = (file) => {
     // File Type Validation
     if (
       !(
-        allowedAudioTypes.includes(file.type) ||
-        allowedImageTypes.includes(file.type) ||
-        allowedVideoTypes.includes(file.type) ||
-        allowedTextTypes.includes(file.type)
+        ALLOWED_AUDIO_TYPES.includes(file.type) ||
+        ALLOWED_IMAGE_TYPES.includes(file.type) ||
+        ALLOWED_VIDEO_TYPES.includes(file.type) ||
+        ALLOWED_TEXT_TYPES.includes(file.type)
       )
     ) {
-      setErrorMessage("Invalid file type. Please Choose another file type");
-      setSelectedFile(null);
-      setIsValidating(false);
-      return;
+      setErrorMessage("Invalid file type. Please choose another file.");
+      return false;
     }
 
     // File Size Validation
     if (file.size > MAX_FILE_SIZE) {
       setErrorMessage("File size too large. Maximum size is 50MB.");
-      setSelectedFile(null);
-      setIsValidating(false);
-      return;
+      return false;
     }
 
-    // Audio/Video Duration Validation
-    if (
-      allowedAudioTypes.includes(file.type) ||
-      allowedVideoTypes.includes(file.type)
-    ) {
+    return true;
+  };
+
+  // Function to validate audio/video duration
+  const validateMediaDuration = (file) => {
+    return new Promise((resolve, reject) => {
       const media = document.createElement(
-        allowedAudioTypes.includes(file.type) ? "audio" : "video"
+        ALLOWED_AUDIO_TYPES.includes(file.type) ? "audio" : "video"
       );
       media.preload = "metadata";
       media.src = URL.createObjectURL(file);
 
       media.onloadedmetadata = () => {
-        URL.revokeObjectURL(media.src); // Clean up
-
+        URL.revokeObjectURL(media.src);
         if (media.duration > MAX_DURATION) {
-          setErrorMessage(
-            "Audio/Video duration too long. Maximum duration is 5 minutes."
+          reject(
+            new Error(
+              "Audio/Video duration too long. Maximum duration is 1 hour."
+            )
           );
-          setSelectedFile(null);
         } else {
-          setSelectedFile(file);
+          resolve();
         }
-        setIsValidating(false);
       };
 
       media.onerror = () => {
-        setErrorMessage("Error loading media file.");
-        setSelectedFile(null);
-        setIsValidating(false);
+        reject(new Error("Error loading media file."));
       };
-    } else {
-      // For other file types, set the file immediately
+    });
+  };
+
+  const handleFileChange = async (event) => {
+    setErrorMessage(null);
+    const file = event.target.files[0];
+
+    if (!file) {
+      setSelectedFile(null);
+      return;
+    }
+
+    setIsValidating(true);
+
+    try {
+      if (!validateFile(file)) {
+        setSelectedFile(null);
+        return;
+      }
+
+      // Validate duration for audio/video
+      if (
+        ALLOWED_AUDIO_TYPES.includes(file.type) ||
+        ALLOWED_VIDEO_TYPES.includes(file.type)
+      ) {
+        await validateMediaDuration(file);
+      }
+
       setSelectedFile(file);
+    } catch (error) {
+      setErrorMessage(error.message);
+      setSelectedFile(null);
+    } finally {
       setIsValidating(false);
     }
   };
@@ -157,12 +174,7 @@ const MessageInput = ({
       component="form"
       onSubmit={onSendMessage}
     >
-      <Grid
-        container
-        spacing={1}
-        alignItems="center"
-        justifyContent="space-around"
-      >
+      <Grid container spacing={1} alignItems="center">
         <Grid item xs={12}>
           <TextField
             label="What do you want to do today..."
@@ -186,18 +198,17 @@ const MessageInput = ({
                       <AttachFileIcon />
                     </IconButton>
                   </Tooltip>
-                  {/* Hidden input for file selection */}
                   <input
                     type="file"
                     ref={fileInputRef}
                     onChange={handleFileChange}
                     style={{ display: "none" }}
-                    accept={[].concat(
-                      allowedImageTypes,
-                      allowedAudioTypes,
-                      allowedVideoTypes,
-                      allowedTextTypes
-                    )}
+                    accept={[
+                      ...ALLOWED_IMAGE_TYPES,
+                      ...ALLOWED_AUDIO_TYPES,
+                      ...ALLOWED_VIDEO_TYPES,
+                      ...ALLOWED_TEXT_TYPES,
+                    ]}
                   />
                 </InputAdornment>
               ),
@@ -217,39 +228,44 @@ const MessageInput = ({
             }}
           />
         </Grid>
-      </Grid>
-      {isValidating && (
-        <Box sx={{ display: "flex", justifyContent: "center", mt: 2 }}>
-          <CircularProgress size={20} />
-        </Box>
-      )}
-
-      {errorMessage && (
-        <Typography variant="body2" color="error" align="center" sx={{ mt: 1 }}>
-          {errorMessage}
-        </Typography>
-      )}
-
-      {selectedFile && !errorMessage && (
-        <Box
-          sx={{
-            mt: 2,
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "space-between",
-          }}
-        >
-          <Box sx={{ display: "flex", alignItems: "center" }}>
-            <InsertDriveFileIcon sx={{ mr: 1 }} />
-            <Typography variant="body2">{selectedFile.name}</Typography>
+        {isValidating && (
+          <Box sx={{ display: "flex", justifyContent: "center", mt: 2 }}>
+            <CircularProgress size={20} />
           </Box>
-          <Tooltip title="Remove File">
-            <IconButton onClick={() => setSelectedFile(null)} size="small">
-              <DeleteIcon fontSize="small" />
-            </IconButton>
-          </Tooltip>
-        </Box>
-      )}
+        )}
+
+        {errorMessage && (
+          <Typography
+            variant="body2"
+            color="error"
+            align="center"
+            sx={{ mt: 1 }}
+          >
+            {errorMessage}
+          </Typography>
+        )}
+
+        {selectedFile && !errorMessage && (
+          <Box
+            sx={{
+              mt: 2,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-between",
+            }}
+          >
+            <Box sx={{ display: "flex", alignItems: "center" }}>
+              <InsertDriveFileIcon sx={{ mr: 1 }} />
+              <Typography variant="body2">{selectedFile.name}</Typography>
+            </Box>
+            <Tooltip title="Remove File">
+              <IconButton onClick={() => setSelectedFile(null)} size="small">
+                <DeleteIcon fontSize="small" />
+              </IconButton>
+            </Tooltip>
+          </Box>
+        )}
+      </Grid>
     </Paper>
   );
 };

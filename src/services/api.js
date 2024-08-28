@@ -3,8 +3,8 @@ import store from "../redux/store";
 import { logout, setTokens } from "../redux/slices/authSlice";
 import { Navigate } from "react-router-dom";
 
-export const API_BASE_URL = "http://localhost:8000/intellido/";
-// export const API_BASE_URL = 'https://abubakralsheikh.pythonanywhere.com/intellido/';
+// export const API_BASE_URL = "http://localhost:8000/intellido/";
+export const API_BASE_URL = 'https://abubakralsheikh.pythonanywhere.com/intellido/';
 
 const apiClient = axios.create({
   baseURL: API_BASE_URL,
@@ -72,6 +72,16 @@ export const deleteTask = (taskId) => apiClient.delete(`tasks/${taskId}/`);
 export const updateTask = (taskData) => apiClient.put(`tasks/${taskData.id}/`, taskData);
 
 // Chat API
-export const sendMessage = (messageData) => apiClient.post("chat/", messageData);
+// export const sendMessage = (messageData, onUploadProgress) => apiClient.post("chat/", messageData, { onUploadProgress });
+export const sendMessage = (messageData, onUploadProgress) => {
+  return apiClient.post("chat/", messageData, {
+    onUploadProgress: (progressEvent) => {
+      // If you have an onUploadProgress callback from the component, call it
+      if (onUploadProgress) {
+        onUploadProgress(progressEvent);
+      }
+    }
+  });
+};
 export const getChatHistory = () => apiClient.get("chat/");
 export const clearChat = () => apiClient.post("chat/clear/");

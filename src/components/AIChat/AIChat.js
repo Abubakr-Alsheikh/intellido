@@ -1,27 +1,24 @@
-import React, { useState, useEffect } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+import React, { useState, useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
 import {
   sendChatMessage,
   getChatHistory,
   clearChatHistory,
-} from '../../redux/slices/chatSlice';
-import {
-  Typography,
-  Container,
-  Paper,
-} from '@mui/material';
-import { useDropzone } from 'react-dropzone';
-
-import ChatHistory from './ChatHistory';
-import MessageInput from './MessageInput';
-import ClearChatButton from './ClearChatButton';
+} from "../../redux/slices/chatSlice";
+import { Typography, Container, Paper } from "@mui/material";
+import { useDropzone } from "react-dropzone";
+import ChatHistory from "./ChatHistory";
+import MessageInput from "./MessageInput";
+import ClearChatButton from "./ClearChatButton";
 
 const AIChat = () => {
   const dispatch = useDispatch();
-  const currentChat = useSelector((state) => state.chat.chatHistory[0]?.current_chat);
+  const currentChat = useSelector(
+    (state) => state.chat.chatHistory[0]?.current_chat
+  );
   const isLoading = useSelector((state) => state.chat.isLoading);
   const error = useSelector((state) => state.chat.error);
-  const [inputMessage, setInputMessage] = useState('');
+  const [inputMessage, setInputMessage] = useState("");
   const [selectedFile, setSelectedFile] = useState(null);
   const [isAiTyping, setIsAiTyping] = useState(false);
 
@@ -42,16 +39,16 @@ const AIChat = () => {
   const handleSendMessage = async (e) => {
     e.preventDefault();
 
-    if (inputMessage.trim() !== '' || selectedFile) {
+    if (inputMessage.trim() !== "" || selectedFile) {
       const formData = new FormData();
-      formData.append('content', inputMessage);
+      formData.append("content", inputMessage);
 
       if (selectedFile) {
-        formData.append('file', selectedFile);
+        formData.append("file", selectedFile);
       }
-      setIsAiTyping(true); 
+      setIsAiTyping(true);
       dispatch(sendChatMessage(formData));
-      setInputMessage('');
+      setInputMessage("");
       setSelectedFile(null);
     }
   };
@@ -77,25 +74,25 @@ const AIChat = () => {
         sx={{
           marginTop: 4,
           marginBottom: 4,
-          display: 'flex',
-          flexDirection: 'column',
-          height: '80vh',
+          display: "flex",
+          flexDirection: "column",
+          height: "80vh",
         }}
       >
         <input {...getInputProps()} />
         {isDragActive && (
           <div
             style={{
-              position: 'fixed',
+              position: "fixed",
               top: 0,
               left: 0,
               right: 0,
               bottom: 0,
-              backgroundColor: 'rgba(0, 0, 0, 0.5)',
+              backgroundColor: "rgba(0, 0, 0, 0.5)",
               zIndex: 1000,
-              display: 'flex',
-              justifyContent: 'center',
-              alignItems: 'center',
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
             }}
           >
             <Typography variant="h5" color="white">
@@ -110,10 +107,10 @@ const AIChat = () => {
             padding: 2,
             borderRadius: 8,
             flexGrow: 1,
-            display: 'flex',
-            flexDirection: 'column',
-            overflowY: 'auto',
-            position: 'relative',
+            display: "flex",
+            flexDirection: "column",
+            overflowY: "auto",
+            position: "relative",
           }}
         >
           <ChatHistory

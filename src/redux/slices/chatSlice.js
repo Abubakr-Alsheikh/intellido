@@ -26,17 +26,28 @@ export const sendChatMessage = createAsyncThunk(
   async (messageData, { dispatch }) => {
     try {
       const content = messageData.get("content");
+      const file = messageData.get('file');
+      const fileURL = file ? URL.createObjectURL(file) : null;
+
       dispatch(
         sendMessage({
-          parts: content ? [content] : [], // Ensure parts is always an array
+          parts: content ? [content] : [],
           role: "user",
+          file: file, // Keep File object here
+          fileURL: fileURL, // Add a separate property for the file URL
+          uploadProgress: 0,
         })
       );
 
-      const response = await api.sendMessage(messageData);
+      const response = await api.sendMessage(messageData, (progressEvent) => {
+        const percentage = Math.round((progressEvent.loaded * 100) / progressEvent.total);
+        dispatch(updateMessageProgress(percentage));
+      });
+
+
       dispatch(
         sendMessage({
-            parts: Array.isArray(response.data.parts) ? response.data.parts : [response.data.parts], // Ensure it's an array 
+            parts: Array.isArray(response.data.parts) ? response.data.parts : [response.data.parts],
             role: "model",
         })
       );
@@ -93,6 +104,13 @@ const chatSlice = createSlice({
     clearChatError(state) {
       state.error = null;
     },
+    updateMessageProgress(state, action) {
+      console.log("working?");
+      const lastMessage = state.chatHistory[0].current_chat[state.chatHistory[0].current_chat.length - 1];
+      if (lastMessage && lastMessage.role === 'user') {
+        lastMessage.uploadProgress = action.payload;
+      }
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -133,5 +151,6 @@ export const {
   updateMessage,
   deleteMessage,
   clearChatError,
+  updateMessageProgress,
 } = chatSlice.actions;
 export default chatSlice.reducer;
