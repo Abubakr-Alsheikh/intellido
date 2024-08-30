@@ -1,11 +1,11 @@
 {
   "files": {
-    "main.js": "/intellido/static/js/main.58a62bfc.js",
+    "main.js": "/intellido/static/js/main.3bbe408d.js",
     "static/media/logo.png": "/intellido/static/media/logo.ab482ed0cc8e92c611c5.png",
     "index.html": "/intellido/index.html",
-    "main.58a62bfc.js.map": "/intellido/static/js/main.58a62bfc.js.map"
+    "main.3bbe408d.js.map": "/intellido/static/js/main.3bbe408d.js.map"
   },
   "entrypoints": [
-    "static/js/main.58a62bfc.js"
+    "static/js/main.3bbe408d.js"
   ]
 }
