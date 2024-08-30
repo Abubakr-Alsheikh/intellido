@@ -18,6 +18,7 @@ const AIChat = () => {
   );
   const isLoading = useSelector((state) => state.chat.isLoading);
   const error = useSelector((state) => state.chat.error);
+  const isClearing = useSelector((state) => state.chat.isClearing);
   const [inputMessage, setInputMessage] = useState("");
   const [selectedFile, setSelectedFile] = useState(null);
   const [isAiTyping, setIsAiTyping] = useState(false);
@@ -118,17 +119,18 @@ const AIChat = () => {
             isLoading={isLoading}
             error={error}
             isAiTyping={isAiTyping}
+            setIsAiTyping={setIsAiTyping}
           />
 
-          <ClearChatButton onClearChat={handleClearChat} />
+          <ClearChatButton onClearChat={handleClearChat} isClearing={isClearing} /> 
 
           <MessageInput
             selectedFile={selectedFile}
             inputMessage={inputMessage}
             onInputChange={handleInputChange}
-            onFileChange={handleFileChange}
             onSendMessage={handleSendMessage}
             setSelectedFile={setSelectedFile}
+            isAiTyping={isAiTyping}
           />
         </Paper>
       </Container>

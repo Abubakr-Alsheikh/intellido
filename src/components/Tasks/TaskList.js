@@ -17,7 +17,6 @@ import {
   Fab,
 } from "@mui/material";
 import AddTaskDialog from "./AddTaskDialog";
-import EditTaskDialog from "./EditTaskDialog";
 import AddIcon from "@mui/icons-material/Add";
 import TaskItem from "./TaskItem";
 
@@ -26,7 +25,6 @@ const TaskList = () => {
   const tasks = useSelector((state) => state.tasks.tasks);
   const isLoading = useSelector((state) => state.tasks.isLoading);
   const error = useSelector((state) => state.tasks.error);
-  const taskListRef = useRef(null);
   const [openAddDialog, setOpenAddDialog] = useState(false);
 
   const handleOpenAddDialog = () => {
@@ -80,7 +78,7 @@ const TaskList = () => {
                   No tasks yet. Add one to get started!
                 </Typography>
               ) : (
-                <List ref={taskListRef}>
+                <List >
                   {" "}
                   {/* Attach ref to the List */}
                   {tasks.map((task) => (
@@ -113,7 +111,6 @@ const TaskList = () => {
         setOpenAddDialog={setOpenAddDialog}
         onClose={() => setOpenAddDialog(false)}
       />
-      <EditTaskDialog />
     </Container>
   );
 };

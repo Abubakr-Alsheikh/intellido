@@ -9,8 +9,9 @@ import {
   Box,
   Alert,
   Paper,
-  InputAdornment,  // For icons in TextFields
-  IconButton       // For visibility toggle
+  InputAdornment,  
+  IconButton,
+  CircularProgress      
 } from '@mui/material';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
 import { API_BASE_URL } from '../../services/api';
@@ -24,14 +25,18 @@ const SignupForm = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [error, setError] = useState(null);
+  const [isLoading, setIsLoading] = useState(false); // Add loading state
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+    setIsLoading(true); // Set loading to true
+    setError(null);
 
     if (password !== confirmPassword) {
       setError('Passwords do not match');
+      setIsLoading(false); // Set loading to false if error
       return;
     }
 
@@ -40,11 +45,13 @@ const SignupForm = () => {
         username,
         password, 
       });
-      dispatch(login(response.data));
-      setError(null);
+      dispatch(login(response.data)); 
       navigate('/home/tasks'); 
     } catch (error) {
-      setError(error.response?.data?.detail || 'Failed to create user');
+      console.error("Signup error:", error); // Log the full error for debugging
+      setError(error.response?.data || 'Failed to create user');
+    } finally {
+      setIsLoading(false); // Set loading to false after request completes
     }
   };
 
@@ -66,13 +73,12 @@ const SignupForm = () => {
         </Box>
 
         {error && (
-      <Alert severity="error" sx={{ mb: 2 }}>
-        {/* Check if the error is for username specifically */}
-        {error.username && typeof error.username === 'object' 
-          ? error.username[0] // Access the error message from the array
-          : 'Failed to create user'} 
-      </Alert>
-    )}
+          <Alert severity="error" sx={{ mb: 2 }}>
+            {typeof error === 'string' ? error : // Display string errors directly
+             error.username ? error.username[0] : // Handle username errors
+             'Failed to create user'} 
+          </Alert>
+        )}
 
         <form onSubmit={handleSubmit}>
           <TextField
@@ -82,6 +88,7 @@ const SignupForm = () => {
             fullWidth
             margin="normal"
             required
+            disabled={isLoading} 
           />
           <TextField
             label="Password"
@@ -91,10 +98,11 @@ const SignupForm = () => {
             fullWidth
             margin="normal"
             required
+            disabled={isLoading} 
             InputProps={{
               endAdornment: (
                 <InputAdornment position="end">
-                  <IconButton onClick={handleTogglePasswordVisibility} edge="end">
+                  <IconButton onClick={handleTogglePasswordVisibility} edge="end" disabled={isLoading}>
                     {showPassword ? <VisibilityOff /> : <Visibility />} 
                   </IconButton>
                 </InputAdornment>
@@ -109,10 +117,11 @@ const SignupForm = () => {
             fullWidth
             margin="normal"
             required
+            disabled={isLoading} 
             InputProps={{
               endAdornment: (
                 <InputAdornment position="end">
-                  <IconButton onClick={handleToggleConfirmPasswordVisibility} edge="end">
+                  <IconButton onClick={handleToggleConfirmPasswordVisibility} edge="end" disabled={isLoading}>
                     {showConfirmPassword ? <VisibilityOff /> : <Visibility />}
                   </IconButton>
                 </InputAdornment>
@@ -125,9 +134,9 @@ const SignupForm = () => {
             color="primary"
             fullWidth
             sx={{ mt: 2, mb: 2 }}
-            disabled={!username || !password || !confirmPassword} 
+            disabled={isLoading || !username || !password || !confirmPassword} 
           >
-            Sign Up
+            {isLoading ? <CircularProgress size={24} color="inherit" /> : 'Sign Up'}
           </Button>
 
           <Typography variant="body2" align="center">

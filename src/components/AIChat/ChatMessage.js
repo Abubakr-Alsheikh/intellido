@@ -6,7 +6,6 @@ import {
   Avatar,
   ListItem,
   Paper,
-  LinearProgress,
   CircularProgress,
 } from "@mui/material";
 import ReactMarkdown from "react-markdown";
@@ -40,7 +39,6 @@ const ChatMessage = ({ message, isAiTyping, setIsAiTyping }) => {
   const [taskSuggestions, setTaskSuggestions] = useState("");
   const [displayedText, setDisplayedText] = useState("");
   const [showSuggestions, setShowSuggestions] = useState(false);
-  const [isTyping, setIsTyping] = useState(false);
 
   useEffect(() => {
     if (isAiTyping) {
@@ -52,7 +50,7 @@ const ChatMessage = ({ message, isAiTyping, setIsAiTyping }) => {
       );
       const textToType = splitResult.conversationText;
 
-      setIsTyping(true); // Start the typing indicator
+      setIsAiTyping(true); // Start the typing indicator
 
       const typingInterval = setInterval(() => {
         currentText += textToType[index];
@@ -63,7 +61,7 @@ const ChatMessage = ({ message, isAiTyping, setIsAiTyping }) => {
           clearInterval(typingInterval);
           setTaskSuggestions(splitResult.taskSuggestions);
           setShowSuggestions(true);
-          setIsTyping(false);
+          setIsAiTyping(false);
         }
       }, 10);
 
@@ -80,7 +78,7 @@ const ChatMessage = ({ message, isAiTyping, setIsAiTyping }) => {
       setTaskSuggestions(splitResult.taskSuggestions);
       setShowSuggestions(true);
     }
-  }, [message, isAiTyping]);
+  }, [message, isAiTyping, setIsAiTyping]);
 
   const isUser = message.role !== "model";
   const getFileTypeIcon = (fileType) => {
@@ -135,9 +133,6 @@ const ChatMessage = ({ message, isAiTyping, setIsAiTyping }) => {
               </Typography>
             </Box>
 
-            {isTyping && ( // Display typing indicator
-              <LinearProgress sx={{ mb: 1 }} />
-            )}
             <Typography
               component={"span"}
               variant="body1"

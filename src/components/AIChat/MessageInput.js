@@ -68,9 +68,9 @@ const MessageInput = ({
   selectedFile,
   inputMessage,
   onInputChange,
-  onFileChange,
   onSendMessage,
   setSelectedFile,
+  isAiTyping
 }) => {
   const fileInputRef = useRef(null);
   const [errorMessage, setErrorMessage] = useState(null);
@@ -219,10 +219,10 @@ const MessageInput = ({
                   variant="contained"
                   color="primary"
                   disabled={
-                    (!inputMessage.trim() && !selectedFile) || isValidating
+                    (!inputMessage.trim()) || isValidating || isAiTyping
                   }
                 >
-                  <SendIcon fontSize="inherit" />
+                  {isAiTyping ? <CircularProgress size={20} color="inherit" /> : <SendIcon fontSize="inherit" />}
                 </IconButton>
               ),
             }}

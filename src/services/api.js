@@ -3,8 +3,8 @@ import store from "../redux/store";
 import { logout, setTokens } from "../redux/slices/authSlice";
 import { Navigate } from "react-router-dom";
 
-// export const API_BASE_URL = "http://localhost:8000/intellido/";
-export const API_BASE_URL = 'https://abubakralsheikh.pythonanywhere.com/intellido/';
+export const API_BASE_URL = "http://localhost:8000/intellido/";
+// export const API_BASE_URL = 'https://abubakralsheikh.pythonanywhere.com/intellido/';
 
 const apiClient = axios.create({
   baseURL: API_BASE_URL,

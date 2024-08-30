@@ -42,7 +42,7 @@ const TaskSuggestionBox = ({ tasks, responseFromAI }) => {
                   <Typography variant="subtitle1" sx={{ flexGrow: 1 }}>
                     {task.title}
                   </Typography>
-                  {responseFromAI && (
+                  {index === index.length && (
                     <>
                       <Tooltip title="Accept Task">
                         <IconButton

@@ -9,15 +9,17 @@ import {
   DialogActions,
   TextField,
   Alert,
+  CircularProgress,
 } from '@mui/material';
 
-const EditTaskDialog = ({ task, onClose }) => { // Receive task from props
+const EditTaskDialog = ({ task, onClose }) => { 
   const dispatch = useDispatch();
   const [formData, setFormData] = useState({ 
     title: task ? task.title : '', 
     description: task ? task.description : '' 
   });
   const [error, setError] = useState(null);
+  const [isLoading, setIsLoading] = useState(false); // Add loading state
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -25,12 +27,16 @@ const EditTaskDialog = ({ task, onClose }) => { // Receive task from props
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setIsLoading(true); // Set loading to true
+    setError(null); 
 
     try {
       await dispatch(updateTask({ id: task.id, ...formData })).unwrap(); 
       onClose();
     } catch (err) {
       setError(err.message || 'Failed to update task');
+    } finally {
+      setIsLoading(false); // Set loading to false after request
     }
   };
 
@@ -52,6 +58,7 @@ const EditTaskDialog = ({ task, onClose }) => { // Receive task from props
             fullWidth
             margin="normal"
             required
+            disabled={isLoading} // Disable while loading
           />
           <TextField
             label="Description"
@@ -62,12 +69,23 @@ const EditTaskDialog = ({ task, onClose }) => { // Receive task from props
             margin="normal"
             multiline
             rows={4}
+            disabled={isLoading} // Disable while loading
           />
           <DialogActions sx={{ justifyContent: 'center' }}>
-            <Button type="submit" variant="contained" color="primary">
-              Save Changes
+            <Button 
+              type="submit" 
+              variant="contained" 
+              color="primary"
+              disabled={isLoading || !formData.title} // Disable if loading or title is empty
+            >
+              {isLoading ? <CircularProgress size={24} color="inherit" /> : 'Save Changes'} 
             </Button>
-            <Button onClick={onClose} variant="outlined" color="secondary">
+            <Button 
+              onClick={onClose} 
+              variant="outlined" 
+              color="secondary"
+              disabled={isLoading} // Disable while loading
+            >
               Cancel
             </Button>
           </DialogActions>

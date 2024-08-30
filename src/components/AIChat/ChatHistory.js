@@ -4,7 +4,7 @@ import ChatMessage from "./ChatMessage";
 import { clearChatError } from "../../redux/slices/chatSlice";
 import { useDispatch } from "react-redux";
 
-const ChatHistory = ({ chatHistory, isLoading, error, isAiTyping }) => {
+const ChatHistory = ({ chatHistory, isLoading, error, isAiTyping, setIsAiTyping }) => {
   const chatContainerRef = useRef(null);
   const dispatch = useDispatch();
 
@@ -30,6 +30,7 @@ const ChatHistory = ({ chatHistory, isLoading, error, isAiTyping }) => {
                   message.role === "model" &&
                   index === chatHistory.length - 2
                 }
+                setIsAiTyping={setIsAiTyping}
               />
             ))
         ) : (

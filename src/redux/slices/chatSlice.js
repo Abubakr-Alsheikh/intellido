@@ -2,9 +2,10 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import * as api from "../../services/api";
 
 const initialState = {
-  chatHistory: [{current_chat:[]}],
+  chatHistory: [{ current_chat: [] }],
   isLoading: false,
   error: null,
+  isClearing: false,
 };
 
 export const getChatHistory = createAsyncThunk(
@@ -26,7 +27,7 @@ export const sendChatMessage = createAsyncThunk(
   async (messageData, { dispatch }) => {
     try {
       const content = messageData.get("content");
-      const file = messageData.get('file');
+      const file = messageData.get("file");
       const fileURL = file ? URL.createObjectURL(file) : null;
 
       dispatch(
@@ -40,15 +41,18 @@ export const sendChatMessage = createAsyncThunk(
       );
 
       const response = await api.sendMessage(messageData, (progressEvent) => {
-        const percentage = Math.round((progressEvent.loaded * 100) / progressEvent.total);
+        const percentage = Math.round(
+          (progressEvent.loaded * 100) / progressEvent.total
+        );
         dispatch(updateMessageProgress(percentage));
       });
 
-
       dispatch(
         sendMessage({
-            parts: Array.isArray(response.data.parts) ? response.data.parts : [response.data.parts],
-            role: "model",
+          parts: Array.isArray(response.data.parts)
+            ? response.data.parts
+            : [response.data.parts],
+          role: "model",
         })
       );
     } catch (error) {
@@ -65,7 +69,6 @@ export const clearChatHistory = createAsyncThunk(
   async () => {
     try {
       await api.clearChat();
-      return initialState; // Return an empty array to clear the chat history
     } catch (error) {
       throw new Error(
         error.response?.data?.detail || "Failed to clear chat history."
@@ -105,9 +108,11 @@ const chatSlice = createSlice({
       state.error = null;
     },
     updateMessageProgress(state, action) {
-      console.log("working?");
-      const lastMessage = state.chatHistory[0].current_chat[state.chatHistory[0].current_chat.length - 1];
-      if (lastMessage && lastMessage.role === 'user') {
+      const lastMessage =
+        state.chatHistory[0].current_chat[
+          state.chatHistory[0].current_chat.length - 1
+        ];
+      if (lastMessage && lastMessage.role === "user") {
         lastMessage.uploadProgress = action.payload;
       }
     },
@@ -129,7 +134,6 @@ const chatSlice = createSlice({
       })
       // Send Chat Message
       .addCase(sendChatMessage.pending, (state) => {
-        state.isLoading = true;
         state.error = null;
       })
       .addCase(sendChatMessage.fulfilled, (state, action) => {
@@ -140,8 +144,12 @@ const chatSlice = createSlice({
         state.error = action.error.message;
       })
       // Clear Chat History
+      .addCase(clearChatHistory.pending, (state) => {
+        state.isClearing = true;
+      })
       .addCase(clearChatHistory.fulfilled, (state) => {
         state.chatHistory = [];
+        state.isClearing = false;
       });
   },
 });

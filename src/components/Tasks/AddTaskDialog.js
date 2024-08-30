@@ -9,12 +9,14 @@ import {
   DialogActions,
   TextField,
   Alert,
+  CircularProgress, 
 } from "@mui/material";
 
 const AddTaskDialog = ({ openAddDialog, setOpenAddDialog, onClose }) => {
   const dispatch = useDispatch();
   const [formData, setFormData] = useState({ title: "", description: "" });
   const [error, setError] = useState(null);
+  const [isLoading, setIsLoading] = useState(false); // Add loading state
 
   const handleClickOpen = () => {
     setOpenAddDialog(true);
@@ -22,8 +24,9 @@ const AddTaskDialog = ({ openAddDialog, setOpenAddDialog, onClose }) => {
 
   const handleClose = () => {
     setOpenAddDialog(false);
-    setFormData({ title: "", description: "" }); // Reset form data
-    setError(null); // Reset error
+    setFormData({ title: "", description: "" }); 
+    setError(null); 
+    setIsLoading(false); // Reset loading state on close
   };
 
   const handleChange = (e) => {
@@ -32,12 +35,16 @@ const AddTaskDialog = ({ openAddDialog, setOpenAddDialog, onClose }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setIsLoading(true); // Set loading to true
+    setError(null);
 
     try {
       await dispatch(createTask(formData)).unwrap();
       handleClose();
     } catch (err) {
       setError(err.message || "Failed to add task");
+    } finally {
+      setIsLoading(false); // Set loading to false after request
     }
   };
 
@@ -59,6 +66,7 @@ const AddTaskDialog = ({ openAddDialog, setOpenAddDialog, onClose }) => {
             fullWidth
             margin="normal"
             required
+            disabled={isLoading} // Disable while loading
           />
           <TextField
             label="Description"
@@ -69,12 +77,23 @@ const AddTaskDialog = ({ openAddDialog, setOpenAddDialog, onClose }) => {
             margin="normal"
             multiline
             rows={4}
+            disabled={isLoading} // Disable while loading
           />
           <DialogActions sx={{ justifyContent: "center" }}>
-            <Button type="submit" variant="contained" color="primary">
-              Add Task
+            <Button 
+              type="submit" 
+              variant="contained" 
+              color="primary"
+              disabled={isLoading || !formData.title} // Disable if loading or title is empty
+            >
+              {isLoading ? <CircularProgress size={24} color="inherit" /> : 'Add Task'} 
             </Button>
-            <Button onClick={handleClose} variant="outlined" color="secondary">
+            <Button 
+              onClick={handleClose} 
+              variant="outlined" 
+              color="secondary"
+              disabled={isLoading} // Disable while loading
+            >
               Cancel
             </Button>
           </DialogActions>
