@@ -22,6 +22,7 @@ const AIChat = () => {
   const [inputMessage, setInputMessage] = useState("");
   const [selectedFile, setSelectedFile] = useState(null);
   const [isAiTyping, setIsAiTyping] = useState(false);
+  const [newMessage, setNewMessage] = useState(false);
 
   useEffect(() => {
     dispatch(getChatHistory());
@@ -48,6 +49,7 @@ const AIChat = () => {
         formData.append("file", selectedFile);
       }
       setIsAiTyping(true);
+      setNewMessage(true);
       dispatch(sendChatMessage(formData));
       setInputMessage("");
       setSelectedFile(null);
@@ -120,6 +122,7 @@ const AIChat = () => {
             error={error}
             isAiTyping={isAiTyping}
             setIsAiTyping={setIsAiTyping}
+            newMessage={newMessage}
           />
 
           <ClearChatButton onClearChat={handleClearChat} isClearing={isClearing} /> 

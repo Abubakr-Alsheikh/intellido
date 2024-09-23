@@ -16,7 +16,7 @@ import PictureAsPdfIcon from "@mui/icons-material/PictureAsPdf";
 import MusicNoteIcon from "@mui/icons-material/MusicNote";
 import VideoLibraryIcon from "@mui/icons-material/VideoLibrary";
 
-const ChatMessage = ({ message, isAiTyping, setIsAiTyping }) => {
+const ChatMessage = ({ message, isAiTyping, setIsAiTyping, lastMesssage }) => {
   // Helper function to parse AI responses
   const splitResponse = (rawResponse) => {
     try {
@@ -279,7 +279,7 @@ const ChatMessage = ({ message, isAiTyping, setIsAiTyping }) => {
             {showSuggestions && taskSuggestions.length > 0 && (
               <TaskSuggestionBox
                 tasks={taskSuggestions}
-                responseFromAI={isAiTyping}
+                lastMesssage={lastMesssage}
               />
             )}
           </Paper>

@@ -12,7 +12,7 @@ import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
 import CancelOutlinedIcon from "@mui/icons-material/CancelOutlined";
 import * as api from "../../services/api";
 
-const TaskSuggestionBox = ({ tasks, responseFromAI }) => {
+const TaskSuggestionBox = ({ tasks, lastMesssage }) => {
   const [hiddenTasks, setHiddenTasks] = useState([]); // State to track hidden tasks
 
   const handleAcceptTask = async (taskIndex) => {
@@ -42,7 +42,7 @@ const TaskSuggestionBox = ({ tasks, responseFromAI }) => {
                   <Typography variant="subtitle1" sx={{ flexGrow: 1 }}>
                     {task.title}
                   </Typography>
-                  {index === index.length && (
+                  {lastMesssage && (
                     <>
                       <Tooltip title="Accept Task">
                         <IconButton
