@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   Typography,
   Box,
@@ -15,6 +15,7 @@ import InsertDriveFileIcon from "@mui/icons-material/InsertDriveFile";
 import PictureAsPdfIcon from "@mui/icons-material/PictureAsPdf";
 import MusicNoteIcon from "@mui/icons-material/MusicNote";
 import VideoLibraryIcon from "@mui/icons-material/VideoLibrary";
+import gsap from "gsap";
 
 const ChatMessage = ({ message, isAiTyping, setIsAiTyping, lastMesssage }) => {
   // Helper function to parse AI responses
@@ -92,8 +93,21 @@ const ChatMessage = ({ message, isAiTyping, setIsAiTyping, lastMesssage }) => {
       return <InsertDriveFileIcon sx={{ fontSize: 40 }} />;
     }
   };
+
+  const messageRef = useRef(null); 
+
+  useEffect(() => {
+    if (messageRef.current) { 
+      gsap.fromTo(
+        messageRef.current, 
+        { opacity: 0, x: isUser ? -20 : 20 }, // Slight slide-in from left/right
+        { opacity: 1, x: 0, duration: 0.5, ease: 'power1.out' } 
+      );
+    }
+  }, [message]); // Animate on every new message 
+
   return (
-    <ListItem sx={{ padding: 1 }}>
+    <ListItem sx={{ padding: 1 }} ref={messageRef}>
       {" "}
       {/* Remove default ListItem padding */}
       <Grid container justifyContent={isUser ? "flex-end" : "flex-start"}>

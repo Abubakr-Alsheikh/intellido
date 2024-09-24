@@ -12,12 +12,14 @@ import SignupForm from "./components/Auth/SignupForm";
 import LoginForm from "./components/Auth/LoginForm";
 import TaskList from "./components/Tasks/TaskList";
 import AIChat from "./components/AIChat/AIChat";
+import PageTransition from "./components/PageTransition";
 
 const App = ({toggleTheme}) => {
   const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
 
   return (
     <HashRouter>
+      <PageTransition>
       <Routes>
         {/* Public Routes */}
         <Route path="/" element={<AuthPage />} /> {/* Landing page */}
@@ -32,6 +34,8 @@ const App = ({toggleTheme}) => {
           <Route path="ai-chat" element={<AIChat />} />
         </Route>
       </Routes>
+      
+      </PageTransition>
     </HashRouter>
   );
 };

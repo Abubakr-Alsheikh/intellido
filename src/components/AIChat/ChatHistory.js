@@ -17,8 +17,8 @@ const ChatHistory = ({ chatHistory, isLoading, error, isAiTyping, setIsAiTyping,
 
   return (
     <Box ref={chatContainerRef} sx={{ flexGrow: 1, overflowY: "auto" }}>
-      <List>
-        {chatHistory?.length > 0 && chatHistory ? (
+      <List style={{overflow:"hidden"}}>
+        { chatHistory?.length > 0 && chatHistory ? (
           chatHistory
             .slice(1)
             .map((message, index) => (
@@ -35,9 +35,9 @@ const ChatHistory = ({ chatHistory, isLoading, error, isAiTyping, setIsAiTyping,
               />
             ))
         ) : (
-          <Typography variant="body2" align="center" sx={{ mt: 2 }}>
+          !isLoading && (<Typography variant="body2" align="center" sx={{ mt: 2 }}>
             No messages yet. Start a conversation!
-          </Typography>
+          </Typography>)
         )}
       </List>
       {isLoading && (

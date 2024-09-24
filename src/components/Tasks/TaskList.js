@@ -19,6 +19,7 @@ import {
 import AddTaskDialog from "./AddTaskDialog";
 import AddIcon from "@mui/icons-material/Add";
 import TaskItem from "./TaskItem";
+import gsap from "gsap";
 
 const TaskList = () => {
   const dispatch = useDispatch();
@@ -33,6 +34,27 @@ const TaskList = () => {
   useEffect(() => {
     dispatch(fetchTasks());
   }, [dispatch]);
+
+  const taskListRef = useRef(null); 
+
+  useEffect(() => {
+    if (tasks.length > 0) {
+      gsap.fromTo(
+        taskListRef.current.children, // Target each child of the List 
+        {
+          y: 20,
+          opacity: 0,
+        },
+        {
+          y: 0,
+          opacity: 1,
+          duration: 0.8, 
+          stagger: 0.1, // Delay between each item's animation
+          ease: "power2.out", // Adjust easing as needed
+        }
+      );
+    }
+  }, [tasks]); 
 
   return (
     <Container
@@ -78,7 +100,7 @@ const TaskList = () => {
                   No tasks yet. Add one to get started!
                 </Typography>
               ) : (
-                <List >
+                <List ref={taskListRef}>
                   {" "}
                   {/* Attach ref to the List */}
                   {tasks.map((task) => (

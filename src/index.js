@@ -6,6 +6,7 @@ import CssBaseline from '@mui/material/CssBaseline';
 import App from './App';
 import store from './redux/store';
 import { indigo, lightBlue } from '@mui/material/colors';
+import './styles/global.css'; // Import the global CSS
 
 const getInitialTheme = () => {
   // Check if user has a preferred theme
