@@ -13,6 +13,7 @@ import LoginForm from "./components/Auth/LoginForm";
 import TaskList from "./components/Tasks/TaskList";
 import AIChat from "./components/AIChat/AIChat";
 import PageTransition from "./components/PageTransition";
+import PageNotFound from './components/PageNotFound'
 
 const App = ({toggleTheme}) => {
   const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
@@ -33,8 +34,9 @@ const App = ({toggleTheme}) => {
           <Route path="tasks" element={<TaskList />} />
           <Route path="ai-chat" element={<AIChat />} />
         </Route>
+        
+        <Route path="*" element={<PageNotFound />} /> 
       </Routes>
-      
       </PageTransition>
     </HashRouter>
   );

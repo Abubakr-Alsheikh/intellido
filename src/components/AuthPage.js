@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Typography, Button, Container, Grid, Box, Divider } from '@mui/material';
+import { Typography, Button, Container, Grid, Divider, Paper } from '@mui/material';
 import logo from "../images/logo.png"; // Assuming you have a logo image
 
 const AuthPage = () => {
@@ -11,16 +11,15 @@ const AuthPage = () => {
       flexDirection: 'column', 
       justifyContent: 'center', 
       alignItems: 'center',
-      backgroundImage: 'url(your-background-image.jpg)', // Add a subtle background image
       backgroundSize: 'cover',
       backgroundPosition: 'center',
     }}>
-      <Box
+      <Paper
         sx={{
           p: 4,
           borderRadius: 3,
           boxShadow: 10,
-          textAlign: 'center'
+          textAlign: 'center',
         }}
       >
         <img 
@@ -52,7 +51,7 @@ const AuthPage = () => {
             </Button>
           </Grid>
         </Grid>
-      </Box>
+      </Paper>
     </Container>
   );
 };

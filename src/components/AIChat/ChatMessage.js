@@ -104,7 +104,7 @@ const ChatMessage = ({ message, isAiTyping, setIsAiTyping, lastMesssage }) => {
         { opacity: 1, x: 0, duration: 0.5, ease: 'power1.out' } 
       );
     }
-  }, [message]); // Animate on every new message 
+  }, [message, isUser]); // Animate on every new message 
 
   return (
     <ListItem sx={{ padding: 1 }} ref={messageRef}>
