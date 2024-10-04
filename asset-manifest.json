@@ -1,13 +1,13 @@
 {
   "files": {
     "main.css": "/intellido/static/css/main.31d6cfe0.css",
-    "main.js": "/intellido/static/js/main.c02f044b.js",
+    "main.js": "/intellido/static/js/main.4b63d9d5.js",
     "static/media/logo.png": "/intellido/static/media/logo.ab482ed0cc8e92c611c5.png",
     "index.html": "/intellido/index.html",
-    "main.c02f044b.js.map": "/intellido/static/js/main.c02f044b.js.map"
+    "main.4b63d9d5.js.map": "/intellido/static/js/main.4b63d9d5.js.map"
   },
   "entrypoints": [
     "static/css/main.31d6cfe0.css",
-    "static/js/main.c02f044b.js"
+    "static/js/main.4b63d9d5.js"
   ]
 }
