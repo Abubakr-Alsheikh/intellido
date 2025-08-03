@@ -1,70 +1,76 @@
-# Getting Started with Create React App
+# IntelliDo - AI-Powered Task Manager
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+[![React](https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)](https://reactjs.org/)
+[![Redux](https://img.shields.io/badge/Redux-593D88?style=for-the-badge&logo=redux&logoColor=white)](https://redux.js.org/)
+[![MUI](https://img.shields.io/badge/MUI-007FFF?style=for-the-badge&logo=mui&logoColor=white)](https://mui.com/)
+[![GSAP](https://img.shields.io/badge/gsap-88CE02?style=for-the-badge&logo=gsap&logoColor=white)](https://greensock.com/gsap/)
 
-## Available Scripts
+Revolutionize your task management with the power of AI. IntelliDo is an intelligent to-do list application that helps you break down complex goals, manage your tasks efficiently, and stay organized. Chat with our AI to get task suggestions, upload relevant files, and streamline your workflow.
 
-In the project directory, you can run:
+**Live Demo:** **[https://abubakr-alsheikh.github.io/intellido/](https://abubakr-alsheikh.github.io/intellido/)**
 
-### `npm start`
+ <!-- It's highly recommended to add a GIF or screenshot of your app here -->
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+## ✨ Key Features
 
-### `npm test`
+-   **🤖 AI-Powered Chat:**
+    -   Engage in a conversation with an AI assistant to brainstorm and plan.
+    -   Receive intelligent task suggestions based on your chat history.
+    -   Accept or reject AI-generated tasks to add them directly to your to-do list.
+    -   Supports text, image, audio, and video file uploads with validation and progress tracking.
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+-   **📋 Comprehensive Task Management:**
+    -   Full CRUD (Create, Read, Update, Delete) functionality for your tasks.
+    -   Mark tasks as complete/incomplete with a satisfying UI update.
+    -   View all your tasks in a clean, organized, and animated list.
 
-### `npm run build`
+-   **🔐 Secure Authentication:**
+    -   User registration and login system.
+    -   Secure sessions using JWT-based authentication with automated access and refresh token handling.
+    -   Protected routes to ensure user data privacy.
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+-   **🎨 Modern & Responsive UI:**
+    -   Sleek, modern interface built with **Material-UI**.
+    -   Switch between **Light and Dark modes** to suit your preference.
+    -   Smooth page transitions and component animations powered by **GSAP**.
+    -   Fully responsive design for a seamless experience on desktop and mobile devices.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+## 🛠️ Tech Stack
 
-### `npm run eject`
+-   **Frontend:** React, Redux Toolkit
+-   **UI Library:** Material-UI (MUI)
+-   **Routing:** React Router
+-   **Animations:** GSAP (GreenSock Animation Platform)
+-   **HTTP Client:** Axios
+-   **Deployment:** GitHub Pages
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+## 🏗️ Project Structure
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+The project follows a standard React application structure, organized for scalability and maintainability.
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+```
+/src
+├── components/       # Reusable React components
+│   ├── AIChat/       # Components related to the AI chat feature
+│   ├── Auth/         # Login and Signup form components
+│   ├── Tasks/        # Components for task management (list, item, dialogs)
+│   └── ...           # Shared components (Header, Footer, Transitions)
+├── redux/            # Redux Toolkit setup
+│   ├── slices/       # Slices for auth, chat, and tasks state
+│   └── store.js      # The main Redux store
+├── services/         # API service layer (Axios configuration, interceptors)
+│   └── api.js
+├── styles/           # Global styles
+└── App.js            # Main application component with routing
+└── index.js          # Entry point of the application
+```
 
-## Learn More
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+## 🔌 Backend
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+This is a frontend application that requires a corresponding backend server to handle user authentication, task management, and AI chat processing. The backend for this project is built with **Django** and the **Django Rest Framework**.
 
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+The live API is hosted on PythonAnywhere. For full functionality, ensure the backend server is running and accessible from the frontend application.
